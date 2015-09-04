@@ -1,5 +1,6 @@
 angular
 .module('bcherny/formatAsCurrency', [])
+.constant('formatAsCurrencyConfig', { strict: false })
 .service('formatAsCurrencyUtilities', function () {
 
   // (haystack: String, needles: Array<String>) => Number
@@ -50,7 +51,7 @@ angular
   }
 
 })
-.directive('formatAsCurrency', ['$filter', '$locale', 'formatAsCurrencyUtilities', function ($filter, $locale, formatAsCurrencyUtilities) {
+.directive('formatAsCurrency', ['$filter', '$locale', 'formatAsCurrencyUtilities', 'formatAsCurrencyConfig', function ($filter, $locale, formatAsCurrencyUtilities, formatAsCurrencyConfig) {
 
   var CURRENCY_SYMBOL = $locale.NUMBER_FORMATS.CURRENCY_SYM
   var util = formatAsCurrencyUtilities
@@ -100,6 +101,9 @@ angular
           // set the cursor back to its expected position
           // (since $render resets the cursor the the end)
           element[0].setSelectionRange(selectonRange[0], selectonRange[1])
+        } else if(formatAsCurrencyConfig.strict) {
+          ngModel.$setViewValue('')
+          ngModel.$render()
         }
 
         return number
